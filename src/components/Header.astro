@@ -7,7 +7,7 @@ const links = [
 ---
 
 <header
-  class="sticky top-0 z-40 border-b border-line bg-paper"
+  class="sticky top-0 z-40 border-b border-white/15 bg-brand"
 >
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:h-[4.25rem] sm:px-6">
     <a href="#top" class="flex shrink-0 items-center" aria-label="Nenasas, ir al inicio">
@@ -16,13 +16,13 @@ const links = [
         alt="Nenasas"
         width="1600"
         height="800"
-        class="h-10 w-auto rounded-md sm:h-11"
+        class="h-10 w-auto sm:h-11"
       />
     </a>
 
-    <nav class="hidden items-center gap-8 text-sm font-medium text-ink md:flex" aria-label="Secciones">
+    <nav class="hidden items-center gap-8 text-sm font-medium text-white md:flex" aria-label="Secciones">
       {links.map((link) => (
-        <a class="transition-colors hover:text-brand" href={link.href}>
+        <a class="transition-colors hover:text-lime" href={link.href}>
           {link.label}
         </a>
       ))}
@@ -31,7 +31,7 @@ const links = [
     <button
       id="menu-btn"
       type="button"
-      class="inline-flex size-10 items-center justify-center rounded-pill border border-line bg-white text-ink md:hidden"
+      class="inline-flex size-10 items-center justify-center rounded-pill border border-white/30 text-white md:hidden"
       aria-controls="mobile-nav"
       aria-expanded="false"
       aria-label="Abrir menú"
@@ -45,13 +45,13 @@ const links = [
 
   <nav
     id="mobile-nav"
-    class="hidden border-t border-line bg-paper px-4 py-3 md:hidden"
+    class="hidden border-t border-white/15 bg-brand px-4 py-3 md:hidden"
     aria-label="Secciones"
   >
-    <ul class="flex flex-col gap-1 text-base font-medium">
+    <ul class="flex flex-col gap-1 text-base font-medium text-white">
       {links.map((link) => (
         <li>
-          <a class="block rounded-lg px-3 py-2 hover:bg-brand-soft" href={link.href}>
+          <a class="block rounded-lg px-3 py-2 hover:bg-white/10 hover:text-lime" href={link.href}>
             {link.label}
           </a>
         </li>
