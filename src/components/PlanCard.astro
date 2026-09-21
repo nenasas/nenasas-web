@@ -1,0 +1,39 @@
+---
+interface Props {
+  name: string;
+  description: string;
+  featured?: boolean;
+}
+
+const { name, description, featured = false } = Astro.props;
+---
+
+<article
+  class:list={[
+    "flex h-full flex-col rounded-card border bg-white p-6 shadow-[0_1px_0_rgba(22,18,28,0.04)] transition duration-200 sm:p-7",
+    featured
+      ? "border-brand ring-2 ring-lime"
+      : "border-line hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-md",
+  ]}
+>
+  {
+    featured && (
+      <p class="mb-3 inline-flex w-fit items-center gap-2 rounded-pill bg-brand px-2.5 py-1 text-xs font-semibold tracking-wide text-lime uppercase">
+        <span class="star" aria-hidden="true" />
+        Destacado
+      </p>
+    )
+  }
+  <h3 class="font-display text-3xl font-black italic tracking-tight text-brand uppercase sm:text-4xl">
+    {name}
+  </h3>
+  <p class="mt-3 flex-1 text-[0.95rem] leading-relaxed text-muted">{description}</p>
+  <button
+    type="button"
+    disabled
+    class="mt-6 inline-flex w-full cursor-not-allowed flex-col items-center rounded-pill bg-ink/8 px-4 py-3 text-ink/45"
+  >
+    <span class="text-sm font-semibold">Elegir plan</span>
+    <span class="text-xs">Próximamente</span>
+  </button>
+</article>

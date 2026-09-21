@@ -1,0 +1,81 @@
+/* Paleta extraída del logo oficial (logo-nenasas.jpg):
+   púrpura eléctrico de fondo, lima del wordmark, llama, negro de siluetas. */
+@theme {
+  --color-brand: #4f25a4;
+  --color-brand-deep: #3a1a7c;
+  --color-brand-soft: #f1ebfb;
+  --color-lime: #e4fd21;
+  --color-flame: #bbfa17;
+  --color-ink: #16121c;
+  --color-muted: #5e5870;
+  --color-paper: #f7f5f0;
+  --color-line: #e4dfd4;
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Barlow Condensed", "Arial Narrow", Impact, sans-serif;
+  --radius-card: 1.25rem;
+  --radius-pill: 999px;
+  --animate-rise: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.star {
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  background: var(--color-lime);
+  clip-path: polygon(
+    50% 0%,
+    62% 38%,
+    100% 50%,
+    62% 62%,
+    50% 100%,
+    38% 62%,
+    0% 50%,
+    38% 38%
+  );
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary {
+  list-style: none;
+}
+
+.faq-item[open] .faq-plus {
+  transform: rotate(45deg);
+}
