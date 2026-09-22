@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nenasas.com.ar/sitemap.xml
