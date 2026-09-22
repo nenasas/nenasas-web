@@ -9,7 +9,8 @@
     "dev": "astro dev --host 0.0.0.0 --port 45217",
     "build": "astro build",
     "preview": "astro preview --host 0.0.0.0 --port 45217",
-    "astro": "astro"
+    "astro": "astro",
+    "logo:knockout": "python3 scripts/knockout-logo.py"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
