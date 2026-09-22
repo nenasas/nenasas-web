@@ -13,7 +13,7 @@ npm install
 npm run dev
 ```
 
-El server queda en [http://127.0.0.1:45217](http://127.0.0.1:45217).
+El server queda en: [http://127.0.0.1:45217](http://127.0.0.1:45217).
 
 | Comando | Qué hace |
 | --- | --- |
