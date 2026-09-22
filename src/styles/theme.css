@@ -8,7 +8,8 @@
   --color-flame: #bbfa17;
   --color-ink: #16121c;
   --color-muted: #5e5870;
-  --color-paper: #f7f5f0;
+  --color-paper: #ffffff;
+  --color-sand: #f1ece4;
   --color-line: #e4dfd4;
   --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Barlow Condensed", "Arial Narrow", Impact, sans-serif;
@@ -30,6 +31,12 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible {
+  scroll-margin-top: 5.5rem;
 }
 
 body {
@@ -66,6 +73,14 @@ body {
     0% 50%,
     38% 38%
   );
+}
+
+.hero-track {
+  scrollbar-width: none;
+}
+
+.hero-track::-webkit-scrollbar {
+  display: none;
 }
 
 .faq-item summary::-webkit-details-marker {

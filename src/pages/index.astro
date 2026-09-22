@@ -2,85 +2,206 @@
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import PlanCard from "../components/PlanCard.astro";
-import FaqItem from "../components/FaqItem.astro";
 
-const title = "Nenasas — humor y magazine en vivo";
+const title = "Nenasas | Streaming de humor en vivo en Argentina";
 const description =
-  "Nenasas es un live propio de humor y magazine. Sin beneficios: si te copa el proyecto, lo bancás por buena onda.";
+  "Streaming de humor en vivo con Carola Oyarbide, Nahuel Puyaps y Lucas Roman. Nenasas, Mañanasas, Nenasas a Laburar y Psicopolítica, en YouTube, desde Argentina.";
+
+const pageUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+const imageUrl = Astro.site ? new URL("/logo-nenasas.jpg", Astro.site).href : "/logo-nenasas.jpg";
 
 const plans = [
   {
-    name: "Socio",
-    description: "El aporte mensual de base. Entrás, bancás el live y seguís con tu vida.",
+    name: "Nenasa Cautelosa",
+    emoji: "🫣",
+    price: "6.000",
+    href: "https://mpago.la/1Wg57Pp",
+    description: "Dale, no seas tímida.",
   },
   {
-    name: "Socio+",
-    description:
-      "Un escalón más por mes. Sigue sin haber contraprestación: es más espalda para que el programa exista.",
-    featured: true,
+    name: "Nenasa Impulsiva",
+    emoji: "⚡",
+    price: "8.000",
+    href: "https://mpago.la/1xMSGKi",
+    description: "Mala pero cutie.",
   },
   {
-    name: "Impulsor",
-    description: "Para quien quiere empujar más fuerte. Tampoco hay beneficios. Hay más Nenasas posibles.",
+    name: "Nenasa Fancy",
+    emoji: "💅",
+    price: "12.000",
+    href: "https://mpago.la/19XTmHo",
+    description: "You better work bitch.",
   },
 ];
 
-const reasons = [
+const shows = [
   {
-    title: "El proyecto",
-    body: "Nenasas es un programa de humor y magazine. Lo hacemos nosotros, con la energía de un living y la picardía de un escenario.",
+    name: "Nenasas",
+    host: "",
+    when: "Lunes, 20 a 22",
+    line: "Tu programa favorito. Tu idioma nativo.",
+    image: "/hero/live-trio.jpg",
+    imagePosition: "object-[50%_32%]",
+    eyebrow: "Lucas · Carola · Puyaps",
   },
   {
-    title: "El live",
-    body: "No es un recorte ni un highlight. Es el programa entero, cada vez que sale al aire. Si estás, estás.",
+    name: "Mañanasas",
+    host: "",
+    when: "Martes y jueves, 11 a 12",
+    line: "Toda la información que no necesitas.",
+    eyebrow: "Lucas Roman",
+    image: "/hero/live-mustache.jpg",
+    imageFrame: "top-[-27%] right-0 h-[120%] w-auto max-w-none aspect-[1024/980] translate-x-[46%]",
   },
   {
-    title: "Por qué aportar",
-    body: "No hay merch, ni acceso VIP, ni un sticker mágico. Bancás el proyecto porque te gusta que exista. Punto.",
+    name: "Nenasas a Laburar",
+    host: "",
+    when: "Miércoles, 17 a 18",
+    line: "¿Carola puede ser una doctora también?",
+    eyebrow: "Carola Oyarbide",
+    image: "/hero/live-poetry.jpg",
+    imageFrame: "top-[-2%] right-0 h-[80%] w-auto max-w-none aspect-[1024/682] translate-x-[46%]",
+  },
+  {
+    name: "Psicopolítica",
+    host: "",
+    when: "Viernes, 19 a 20, quincenal",
+    line: "Imprescindible como respirar.",
+    eyebrow: "Nahuel Puyaps",
+    image: "/hero/live-cap.jpg",
+    imageFrame: "top-[-14%] right-0 h-[96%] w-auto max-w-none aspect-[1024/963] translate-x-[28%]",
   },
 ];
 
-const faqs = [
+const heroSlides = [
   {
-    question: "¿Hay beneficios?",
-    answer:
-      "No. Cero. Ni un emote, ni un behind the scenes exclusivo. Aportás porque te gusta el programa.",
+    src: "/hero/live-trio.jpg",
+    alt: "Los tres de Nenasas en vivo, con micrófono, frente al logo proyectado",
+    width: 1024,
+    height: 682,
   },
   {
-    question: "¿Cuándo se cobra?",
-    answer:
-      "Todavía no. Estamos armando los medios de pago. Cuando esté, lo avisamos. Por ahora los botones dicen Próximamente y es en serio.",
+    src: "/hero/vanity-mirror.jpg",
+    alt: "Los tres de Nenasas juntos en un espejo de camerino cubierto de stickers",
+    width: 1024,
+    height: 682,
   },
   {
-    question: "¿ARS e internacional?",
-    answer:
-      "Sí. En Argentina va a ser Mercado Pago. Para el resto, un procesador internacional (todavía TBD). Mismos planes, distinta vía.",
+    src: "/hero/live-cap.jpg",
+    alt: "Uno de Nenasas sentado en el escenario, con gorra y micrófono",
+    width: 1024,
+    height: 963,
   },
   {
-    question: "¿Puedo cancelar?",
-    answer: "Sí. Cuando esté la suscripción, la bajás cuando quieras. Sin letra chica dramática.",
+    src: "/hero/live-woman-mic.jpg",
+    alt: "Una de Nenasas en el escenario, con micrófono, y el logo proyectado atrás",
+    width: 1024,
+    height: 682,
   },
   {
-    question: "¿Qué programas son?",
-    answer:
-      "Humor y magazine, en vivo, propios. No es un recorte de otro lado. Somos las tres siluetas del logo, con micrófono.",
+    src: "/hero/live-poetry.jpg",
+    alt: "Nenasas en el Jam de poesía, ella al micrófono con el puño en alto",
+    width: 1024,
+    height: 682,
+  },
+  {
+    src: "/hero/live-mustache.jpg",
+    alt: "Uno de Nenasas al micrófono, sonriendo en el escenario",
+    width: 1024,
+    height: 980,
+  },
+  {
+    src: "/hero/merch-selfie.jpg",
+    alt: "Los tres de Nenasas con remeras del logo",
+    width: 1024,
+    height: 768,
+  },
+  {
+    src: "/hero/live-letters.jpg",
+    alt: "Los tres de Nenasas en el escenario, junto al cartel de letras NE NA SA",
+    width: 1024,
+    height: 924,
+  },
+  {
+    src: "/hero/live-wig.jpg",
+    alt: "Dos de Nenasas en el Jam de poesía, pasando una peluca en el escenario",
+    width: 1024,
+    height: 835,
   },
 ];
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "PerformingGroup",
+      name: "Nenasas",
+      description,
+      url: pageUrl,
+      image: Astro.site ? imageUrl : undefined,
+      email: "nenasasenvivo@gmail.com",
+      sameAs: ["https://www.youtube.com/@Nenasasenvivo"],
+      member: [
+        { "@type": "Person", name: "Carola Oyarbide" },
+        { "@type": "Person", name: "Nahuel Puyaps" },
+        { "@type": "Person", name: "Lucas Roman" },
+      ],
+    },
+    {
+      "@type": "WebSite",
+      name: "Nenasas",
+      url: pageUrl,
+      inLanguage: "es-AR",
+      description,
+    },
+    {
+      "@type": "ItemList",
+      name: "Grilla de Nenasas",
+      itemListElement: shows.map((show, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "CreativeWork",
+          name: show.name,
+          description: [show.eyebrow, show.when, show.line].filter(Boolean).join(". "),
+        },
+      })),
+    },
+  ],
+};
+
+const structuredDataJson = JSON.stringify(structuredData).replaceAll("<", "\\u003c");
 ---
 
 <html lang="es-AR">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    {pageUrl && <link rel="canonical" href={pageUrl} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:site_name" content="Nenasas" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content="/logo-nenasas.jpg" />
-    <meta property="og:locale" content="es_AR" />
+    {pageUrl && <meta property="og:url" content={pageUrl} />}
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:alt" content="Logo de Nenasas, tres siluetas sobre violeta" />
+    <meta property="og:image:width" content="1600" />
+    <meta property="og:image:height" content="800" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+    <meta name="twitter:image:alt" content="Logo de Nenasas, tres siluetas sobre violeta" />
     <meta name="theme-color" content="#4F25A4" />
+    <script is:inline type="application/ld+json" set:html={structuredDataJson} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -99,65 +220,174 @@ const faqs = [
     <Header />
 
     <main id="contenido">
-      <section class="overflow-hidden bg-brand">
-        <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 lg:py-20">
-          <div>
-            <p class="animate-rise flex items-center gap-2 text-xs font-semibold tracking-[0.18em] text-lime uppercase delay-75">
-              <span class="star" aria-hidden="true"></span>
-              Humor · magazine · en vivo
-            </p>
-            <h1
-              class="animate-rise mt-4 font-display text-5xl leading-[0.95] font-black tracking-tight text-white italic uppercase delay-100 sm:text-6xl lg:text-7xl"
-            >
-              Humor y magazine, en vivo.
-            </h1>
-            <p class="animate-rise mt-5 max-w-md text-lg leading-relaxed text-white/80 delay-150">
-              Nenasas es un live propio. No hay beneficios: si te copa el proyecto, lo bancás. Así de simple.
-            </p>
-            <a
-              href="#planes"
-              class="animate-rise mt-8 inline-flex items-center rounded-pill bg-lime px-6 py-3 text-sm font-semibold text-ink delay-200 transition hover:bg-flame focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand"
-            >
-              Quiero ser socio
-            </a>
-          </div>
-          <figure class="animate-rise delay-200">
-            <img
-              src="/logo-nenasas.jpg"
-              alt="Nenasas"
-              width="2400"
-              height="1200"
-              class="w-full object-contain"
-            />
-          </figure>
+      <section
+        id="hero"
+        class="relative h-svh bg-ink"
+        aria-roledescription="carrusel"
+        aria-label="Fotos de Nenasas en vivo"
+      >
+        <div
+          id="hero-track"
+          class="hero-track flex h-full min-h-0 snap-x snap-mandatory overflow-x-auto overflow-y-hidden"
+        >
+          {
+            heroSlides.map((slide, index) => (
+              <div class="relative h-full min-h-0 w-full shrink-0 snap-center overflow-hidden" data-hero-slide>
+                <img
+                  src={slide.src}
+                  alt={slide.alt}
+                  width={slide.width}
+                  height={slide.height}
+                  fetchpriority={index === 0 ? "high" : undefined}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  class="absolute inset-0 size-full object-cover object-center"
+                />
+              </div>
+            ))
+          }
         </div>
+
+        <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-ink/80 via-ink/35 to-transparent"></div>
+        <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/70 to-transparent lg:from-ink/40"></div>
+
+        <div class="pointer-events-none absolute inset-0 flex items-end lg:items-center lg:pt-20">
+          <div class="mx-auto w-full max-w-screen-2xl px-4 pb-16 sm:px-6 lg:px-16 lg:pb-20">
+            <p class="flex items-center gap-2 text-xs font-semibold tracking-[0.18em] text-lime uppercase">
+              <span class="star" aria-hidden="true"></span>
+              Humor · Actualidad · Comunidad
+            </p>
+            <h1 class="mt-4 max-w-xl font-display text-5xl leading-[0.95] font-black tracking-tight text-white italic uppercase sm:text-6xl lg:text-7xl">
+              Nenasas Streaming en vivo
+            </h1>
+            <p class="mt-5 max-w-md text-lg leading-relaxed text-white">
+              Nenasas es un nuevo idioma, es un streaming, es humor. Nenasas sos vos.
+            </p>
+            <div class="mt-8 grid w-fit max-w-full grid-cols-1 gap-3 sm:grid-cols-2">
+              <a
+                href="#planes"
+                class="pointer-events-auto inline-flex items-center justify-center whitespace-nowrap rounded-pill bg-lime px-6 py-3 text-sm font-semibold text-ink transition hover:bg-flame focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+              >
+                Quiero ser socio
+              </a>
+              <a
+                href="https://www.youtube.com/@Nenasasenvivo?sub_confirmation=1"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group pointer-events-auto inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-pill border border-white px-6 py-3 text-sm font-semibold text-white transition hover:border-lime hover:text-lime focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+              >
+                <svg class="size-5 shrink-0 text-[#ff0000] transition-colors group-hover:text-lime" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path>
+                </svg>
+                Suscribite en YouTube
+                <span class="sr-only"> (se abre en una pestaña nueva)</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <button
+          id="hero-prev"
+          type="button"
+          class="absolute top-20 left-3 z-10 hidden size-10 items-center justify-center rounded-pill border border-white/30 bg-ink/50 text-white hover:border-lime hover:text-lime focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime sm:left-4 md:inline-flex lg:top-1/2 lg:-translate-y-1/2"
+          aria-label="Foto anterior"
+        >
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <path d="M11.5 4.5 7 9l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </button>
+        <button
+          id="hero-next"
+          type="button"
+          class="absolute top-20 right-3 z-10 hidden size-10 items-center justify-center rounded-pill border border-white/30 bg-ink/50 text-white hover:border-lime hover:text-lime focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime sm:right-4 md:inline-flex lg:top-1/2 lg:-translate-y-1/2"
+          aria-label="Foto siguiente"
+        >
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <path d="M6.5 4.5 11 9l-4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </button>
       </section>
 
-      <section class="bg-white" aria-labelledby="manifiesto-title">
-        <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+      <script>
+        const hero = document.getElementById("hero");
+        const track = document.getElementById("hero-track");
+        const prev = document.getElementById("hero-prev");
+        const next = document.getElementById("hero-next");
+        const count = track?.querySelectorAll("[data-hero-slide]").length ?? 0;
+
+        if (hero && track && count) {
+          const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+          const indexFromScroll = () => Math.round(track.scrollLeft / track.clientWidth);
+
+          const goTo = (i: number) => {
+            const n = ((i % count) + count) % count;
+            track.scrollTo({
+              left: n * track.clientWidth,
+              behavior: motion.matches ? "auto" : "smooth",
+            });
+          };
+
+          prev?.addEventListener("click", () => goTo(indexFromScroll() - 1));
+          next?.addEventListener("click", () => goTo(indexFromScroll() + 1));
+
+          if (!motion.matches) {
+            let paused = false;
+            let timer = 0;
+
+            const play = () => {
+              window.clearInterval(timer);
+              if (paused || document.hidden) return;
+              timer = window.setInterval(() => goTo(indexFromScroll() + 1), 5000);
+            };
+
+            const stop = () => {
+              window.clearInterval(timer);
+              timer = 0;
+            };
+
+            hero.addEventListener("pointerenter", () => {
+              paused = true;
+              stop();
+            });
+            hero.addEventListener("pointerleave", () => {
+              paused = false;
+              play();
+            });
+            hero.addEventListener("focusin", () => {
+              paused = true;
+              stop();
+            });
+            hero.addEventListener("focusout", (event) => {
+              if (hero.contains(event.relatedTarget as Node | null)) return;
+              paused = false;
+              play();
+            });
+            document.addEventListener("visibilitychange", () => {
+              if (document.hidden) stop();
+              else play();
+            });
+            prev?.addEventListener("click", play);
+            next?.addEventListener("click", play);
+            play();
+          }
+        }
+      </script>
+
+      <section aria-labelledby="bio-title">
+        <div class="mx-auto w-full max-w-screen-2xl px-4 py-16 sm:px-6 sm:py-20 lg:px-10">
           <p class="flex items-center gap-2 text-xs font-semibold tracking-[0.18em] text-brand uppercase">
             <span class="star" aria-hidden="true"></span>
-            Por qué existe
+            Quiénes somos
           </p>
-          <h2 id="manifiesto-title" class="mt-3 font-display text-4xl font-black tracking-tight text-ink italic uppercase sm:text-5xl">
-            Un programa propio, sin contraprestación.
+          <h2 id="bio-title" class="mt-3 max-w-3xl font-display text-4xl font-black tracking-tight text-ink italic uppercase sm:text-5xl">
+            Una nenasa nunca está sola
           </h2>
-          <div class="mt-10 grid gap-4 md:grid-cols-3">
-            {
-              reasons.map((reason) => (
-                <article class="rounded-card border border-line bg-paper p-6 transition duration-200 hover:-translate-y-1 hover:border-brand">
-                  <h3 class="font-display text-2xl font-extrabold tracking-tight text-brand italic uppercase">
-                    {reason.title}
-                  </h3>
-                  <p class="mt-3 text-[0.95rem] leading-relaxed text-muted">{reason.body}</p>
-                </article>
-              ))
-            }
-          </div>
+          <p class="mt-6 max-w-2xl text-lg leading-relaxed text-ink">
+            Somos Carola Oyarbide, Nahuel Puyaps y Lucas Roman. Tres amigos que queremos compartir la alegría con vos. Por eso armamos esta programación de humor en vivo, chiquita, para estar juntas y lo más cerquita posible.
+          </p>
           <figure class="mt-10">
             <img
               src="/hosts-selfie.jpg"
-              alt="Los tres de Nenasas con remeras del logo"
+              alt="Carola Oyarbide, Nahuel Puyaps y Lucas Roman con remeras de Nenasas"
               width="1280"
               height="960"
               class="aspect-[16/9] w-full rounded-card object-cover object-[50%_35%] ring-1 ring-line"
@@ -166,120 +396,217 @@ const faqs = [
         </div>
       </section>
 
-      <section id="planes" class="scroll-mt-24" aria-labelledby="planes-title">
-        <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+      <section id="programacion" class="scroll-mt-24" aria-labelledby="programacion-title">
+        <div class="mx-auto w-full max-w-screen-2xl px-4 py-16 sm:px-6 sm:py-20 lg:px-10">
           <p class="flex items-center gap-2 text-xs font-semibold tracking-[0.18em] text-brand uppercase">
             <span class="star" aria-hidden="true"></span>
-            Planes recurrentes
+            Programación
           </p>
-          <h2 id="planes-title" class="mt-3 font-display text-4xl font-black tracking-tight text-ink italic uppercase sm:text-5xl">
-            Tres maneras de bancar el live.
+          <h2 id="programacion-title" class="mt-3 font-display text-4xl font-black tracking-tight text-ink italic uppercase sm:text-5xl">
+            Grilla Nenasa
           </h2>
-          <p class="mt-3 max-w-xl text-muted">Sin montos todavía. Elegís el nivel; el cobro viene después.</p>
-          <div class="mt-10 grid gap-4 md:grid-cols-3">
+          <div class="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-4">
             {
-              plans.map((plan) => (
-                <PlanCard name={plan.name} description={plan.description} featured={plan.featured} />
+              shows.map((show) => (
+                <article
+                  class:list={[
+                    "relative flex h-full flex-col overflow-hidden rounded-card border p-6 shadow-[0_1px_0_rgba(22,18,28,0.04)] sm:p-7",
+                    show.image
+                      ? "min-h-72 justify-end border-white/15 bg-[#05030a]"
+                      : "border-line bg-white",
+                  ]}
+                >
+                  {
+                    show.image && (
+                      <>
+                        <img
+                          src={show.image}
+                          alt=""
+                          width="1024"
+                          height="768"
+                          loading="lazy"
+                          class:list={[
+                            "absolute object-cover",
+                            show.imageFrame ?? ["inset-0 size-full", show.imagePosition],
+                          ]}
+                        />
+                        <div
+                          class="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/55 to-transparent"
+                          aria-hidden="true"
+                        />
+                      </>
+                    )
+                  }
+                  <div class:list={["relative", show.image && "mt-auto"]}>
+                    {
+                      show.eyebrow && (
+                        <p class="text-xs font-semibold tracking-[0.14em] text-white uppercase">{show.eyebrow}</p>
+                      )
+                    }
+                    <h3
+                      class:list={[
+                        "font-display text-3xl font-black tracking-tight italic uppercase lg:text-2xl xl:text-3xl",
+                        show.image ? "text-lime" : "text-brand",
+                        show.eyebrow && "mt-1",
+                      ]}
+                    >
+                      {show.name}
+                    </h3>
+                    {show.host && (
+                      <p
+                        class:list={[
+                          "text-[0.95rem] font-semibold",
+                          show.image ? "mt-1 text-white" : "mt-3 text-ink",
+                        ]}
+                      >
+                        {show.host}
+                      </p>
+                    )}
+                    <p
+                      class:list={[
+                        "font-display text-2xl font-extrabold tracking-tight",
+                        show.image || show.host ? "mt-1" : "mt-3",
+                        show.image ? "text-white" : "text-ink",
+                      ]}
+                    >
+                      {show.when}
+                    </p>
+                    <p
+                      class:list={[
+                        "text-[0.95rem] leading-snug",
+                        show.image ? "mt-1 text-white/85" : "mt-3 leading-relaxed text-muted",
+                      ]}
+                    >
+                      {show.line}
+                    </p>
+                  </div>
+                </article>
               ))
             }
           </div>
-          <div class="mt-8 flex flex-wrap items-center gap-2">
-            <span class="rounded-pill border border-line bg-white px-3 py-1.5 text-xs font-medium text-ink">
-              Mercado Pago · ARS
-            </span>
-            <span class="rounded-pill border border-line bg-white px-3 py-1.5 text-xs font-medium text-ink">
-              Internacional · TBD
-            </span>
-          </div>
         </div>
       </section>
 
-      <section id="aportar" class="scroll-mt-24 bg-white" aria-labelledby="aportar-title">
-        <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6">
-          <div class="rounded-card border border-line bg-paper px-6 py-8 sm:flex sm:items-center sm:justify-between sm:gap-10 sm:px-8">
-            <div class="max-w-xl">
-              <p class="flex items-center gap-2 text-xs font-semibold tracking-[0.18em] text-brand uppercase">
-                <span class="star" aria-hidden="true"></span>
-                Una sola vez
-              </p>
-              <h2 id="aportar-title" class="mt-2 font-display text-3xl font-black tracking-tight text-ink italic uppercase sm:text-4xl">
-                ¿No te cierra lo mensual?
-              </h2>
-              <p class="mt-2 text-[0.95rem] text-muted">Un aporte único también suma. Misma lógica: sin beneficios, por buena onda.</p>
-              <div class="mt-4 flex flex-wrap gap-2">
-                <span class="rounded-pill border border-line bg-white px-3 py-1.5 text-xs font-medium text-ink">
-                  Mercado Pago · ARS
-                </span>
-                <span class="rounded-pill border border-line bg-white px-3 py-1.5 text-xs font-medium text-ink">
-                  Internacional · TBD
-                </span>
-              </div>
-            </div>
-            <button
-              type="button"
-              disabled
-              class="mt-6 inline-flex w-full cursor-not-allowed flex-col items-center rounded-pill bg-ink/8 px-8 py-3 text-ink/45 sm:mt-0 sm:w-auto sm:min-w-44"
-            >
-              <span class="text-sm font-semibold">Aportar</span>
-              <span class="text-xs">Próximamente</span>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <section id="faq" class="scroll-mt-24" aria-labelledby="faq-title">
-        <div class="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20">
+      <section id="planes" class="scroll-mt-24" aria-labelledby="planes-title">
+        <div class="mx-auto w-full max-w-screen-2xl px-4 py-16 sm:px-6 sm:py-20 lg:px-10">
           <p class="flex items-center gap-2 text-xs font-semibold tracking-[0.18em] text-brand uppercase">
             <span class="star" aria-hidden="true"></span>
-            Preguntas
+            Planes
           </p>
-          <h2 id="faq-title" class="mt-3 font-display text-4xl font-black tracking-tight text-ink italic uppercase">
-            Lo justo y necesario.
+          <h2 id="planes-title" class="mt-3 font-display text-4xl font-black tracking-tight text-ink italic uppercase sm:text-5xl">
+            Maneras de bancar a Nenasas
           </h2>
-          <div class="mt-8">
-            {faqs.map((faq) => <FaqItem question={faq.question} answer={faq.answer} />)}
+          <p class="mt-3 max-w-xl text-muted">Lo bajás cuando quieras, desde tu cuenta.</p>
+          <div class="mt-10 grid gap-4 md:grid-cols-3">
+            {
+              plans.map((plan) => (
+                <PlanCard
+                  name={plan.name}
+                  description={plan.description}
+                  href={plan.href}
+                  price={plan.price}
+                  emoji={plan.emoji}
+                />
+              ))
+            }
           </div>
+          <div id="aportar" class="mt-4 grid scroll-mt-24 gap-4 md:grid-cols-2">
+            <article
+              class="flex h-full flex-col rounded-card border border-line bg-sand p-6 shadow-[0_1px_0_rgba(22,18,28,0.04)] transition duration-200 hover:-translate-y-1 hover:border-brand hover:shadow-[0_16px_32px_-20px_rgba(79,37,164,0.45)] sm:p-7"
+            >
+              <h3 class="font-display text-3xl font-black tracking-tight text-brand uppercase sm:text-4xl">
+                <span class="italic">Aporte único</span>
+              </h3>
+              <p class="mt-3 flex-1 text-[0.95rem] leading-relaxed text-muted">
+                Un aporte único también suma. El monto lo ponés al pagar.
+              </p>
+              <a
+                href="https://link.mercadopago.com.ar/nenasas"
+                class="mt-6 inline-flex w-full items-center justify-center rounded-pill bg-lime px-8 py-3 text-sm font-semibold text-ink transition hover:bg-flame focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
+              >
+                Mercado Pago
+              </a>
+            </article>
+            <article
+              class="flex h-full flex-col rounded-card border border-line bg-sand p-6 shadow-[0_1px_0_rgba(22,18,28,0.04)] transition duration-200 hover:-translate-y-1 hover:border-brand hover:shadow-[0_16px_32px_-20px_rgba(79,37,164,0.45)] sm:p-7"
+            >
+              <h3 class="font-display text-3xl font-black tracking-tight text-brand uppercase sm:text-4xl">
+                <span class="italic">Si estás en el exterior</span>
+              </h3>
+              <a
+                href="https://www.paypal.com/donate/?hosted_button_id=FQH829UVDTUPS"
+                aria-label="PayPal"
+                class="mt-auto inline-flex self-start rounded-md pt-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
+              >
+                <img src="/paypal.svg" alt="PayPal" width="170" height="48" class="h-10 w-auto" />
+              </a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="beneficios" class="scroll-mt-24" aria-labelledby="beneficios-title">
+        <div class="mx-auto w-full max-w-screen-2xl px-4 py-16 sm:px-6 sm:py-20 lg:px-10">
+          <p class="flex items-center gap-2 text-xs font-semibold tracking-[0.18em] text-brand uppercase">
+            <span class="star" aria-hidden="true"></span>
+            Beneficios
+          </p>
+          <h2 id="beneficios-title" class="mt-3 font-display text-4xl font-black tracking-tight text-ink italic uppercase sm:text-5xl">
+            Para quien se suscribe
+          </h2>
         </div>
       </section>
     </main>
 
+    <a
+      id="to-top"
+      href="#top"
+      hidden
+      class="fixed right-4 bottom-4 z-40 inline-flex size-12 items-center justify-center rounded-pill bg-brand text-white shadow-[0_16px_32px_-20px_rgba(22,18,28,0.6)] hover:bg-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime focus-visible:ring-offset-2"
+      aria-label="Volver arriba"
+    >
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+        <path d="M4.5 11.5 9 7l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </a>
+    <script>
+      const toTop = document.getElementById("to-top");
+      const syncToTop = () => {
+        if (toTop) toTop.hidden = window.scrollY < 480;
+      };
+      window.addEventListener("scroll", syncToTop, { passive: true });
+      syncToTop();
+    </script>
+
     <footer class="bg-brand text-white">
-      <div class="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 sm:px-6 md:flex-row md:items-end md:justify-between">
+      <div class="mx-auto flex w-full max-w-screen-2xl flex-col gap-8 px-4 py-12 sm:px-6 md:flex-row md:items-end md:justify-between lg:px-10">
         <div>
           <img
-            src="/logo-nenasas.jpg"
+            src="/logo-nenasas.png"
             alt="Nenasas"
-            width="1600"
-            height="800"
+            width="1400"
+            height="676"
             class="h-12 w-auto rounded-md"
           />
-          <p class="mt-4 text-sm text-white/80">© Nenasas. Humor y magazine en vivo.</p>
+          <p class="mt-4 text-sm text-white/80">© Nenasas. Streaming en vivo.</p>
         </div>
-        <ul class="flex flex-col gap-2 text-sm sm:flex-row sm:gap-6">
-          <li>
-            <a class="underline decoration-lime/70 underline-offset-4 hover:text-lime" href="mailto:hola@nenasas.com">
-              hola@nenasas.com
-            </a>
-          </li>
-          <li>
-            <a
-              class="underline decoration-lime/70 underline-offset-4 hover:text-lime"
-              href="https://www.instagram.com/nenasas"
-              rel="noopener noreferrer"
-            >
-              Instagram
-            </a>
-          </li>
-          <li>
-            <a
-              class="underline decoration-lime/70 underline-offset-4 hover:text-lime"
-              href="https://www.youtube.com/@nenasas"
-              rel="noopener noreferrer"
-            >
-              YouTube
-            </a>
-          </li>
-        </ul>
+        <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6">
+          <a class="rounded-sm text-sm underline decoration-lime/70 underline-offset-4 hover:text-lime focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime" href="mailto:nenasasenvivo@gmail.com">
+            nenasasenvivo@gmail.com
+          </a>
+          <a
+            href="https://www.youtube.com/@Nenasasenvivo?sub_confirmation=1"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-pill border border-white px-6 py-3 text-sm font-semibold text-white transition hover:border-lime hover:text-lime focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime"
+          >
+            <svg class="size-5 shrink-0 text-[#ff0000] transition-colors group-hover:text-lime" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path>
+            </svg>
+            Suscribite en YouTube
+            <span class="sr-only"> (se abre en una pestaña nueva)</span>
+          </a>
+        </div>
       </div>
     </footer>
   </body>
