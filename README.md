@@ -6,7 +6,7 @@ Los planes abren links de Mercado Pago y PayPal. No hay backend, auth ni base de
 
 Astro 7 y Tailwind CSS 4. Hace falta Node `>=22.12.0`.
 
-## Cómo correrlo
+## Cómo correrlo?
 
 ```sh
 npm install
