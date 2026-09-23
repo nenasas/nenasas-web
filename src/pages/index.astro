@@ -1,4 +1,5 @@
 ---
+import Analytics from "@vercel/analytics/astro";
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import PlanCard from "../components/PlanCard.astro";
@@ -140,7 +141,10 @@ const structuredData = {
       url: pageUrl,
       image: Astro.site ? imageUrl : undefined,
       email: "nenasasenvivo@gmail.com",
-      sameAs: ["https://www.youtube.com/@Nenasasenvivo"],
+      sameAs: [
+        "https://www.youtube.com/@Nenasasenvivo",
+        "https://www.instagram.com/nenasasenvivo",
+      ],
       member: [
         { "@type": "Person", name: "Carola Oyarbide" },
         { "@type": "Person", name: "Nahuel Puyaps" },
@@ -209,6 +213,7 @@ const structuredDataJson = JSON.stringify(structuredData).replaceAll("<", "\\u00
       rel="stylesheet"
     />
     <title>{title}</title>
+    <Analytics />
   </head>
   <body id="top" class="antialiased">
     <a
@@ -554,6 +559,7 @@ const structuredDataJson = JSON.stringify(structuredData).replaceAll("<", "\\u00
           <h2 id="beneficios-title" class="mt-3 font-display text-4xl font-black tracking-tight text-ink italic uppercase sm:text-5xl">
             Para quien se suscribe
           </h2>
+          <p class="mt-3 max-w-xl text-muted">Una nenasa merece beneficios. Pronto tendremos de todo para vos.</p>
         </div>
       </section>
     </main>
@@ -594,20 +600,45 @@ const structuredDataJson = JSON.stringify(structuredData).replaceAll("<", "\\u00
           <a class="rounded-sm text-sm underline decoration-lime/70 underline-offset-4 hover:text-lime focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime" href="mailto:nenasasenvivo@gmail.com">
             nenasasenvivo@gmail.com
           </a>
-          <a
-            href="https://www.youtube.com/@Nenasasenvivo?sub_confirmation=1"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-pill border border-white px-6 py-3 text-sm font-semibold text-white transition hover:border-lime hover:text-lime focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime"
-          >
-            <svg class="size-5 shrink-0 text-[#ff0000] transition-colors group-hover:text-lime" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path>
-            </svg>
-            Suscribite en YouTube
-            <span class="sr-only"> (se abre en una pestaña nueva)</span>
-          </a>
+          <div class="flex items-center gap-3 sm:gap-6">
+            <a
+              href="https://www.youtube.com/@Nenasasenvivo?sub_confirmation=1"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-pill border border-white px-6 py-3 text-sm font-semibold text-white transition hover:border-lime hover:text-lime focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime"
+            >
+              <svg class="size-5 shrink-0 text-[#ff0000] transition-colors group-hover:text-lime" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path>
+              </svg>
+              Suscribite en YouTube
+              <span class="sr-only"> (se abre en una pestaña nueva)</span>
+            </a>
+            <a
+              href="https://www.instagram.com/nenasasenvivo"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram (se abre en una pestaña nueva)"
+              class="inline-flex size-12 shrink-0 items-center justify-center rounded-pill border border-white text-white transition hover:border-lime hover:text-lime focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime"
+            >
+              <svg class="size-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"></path>
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
     </footer>
+    <p class="bg-[color-mix(in_oklab,var(--color-brand)_92%,black)] text-xs text-white/80">
+      <span class="mx-auto block w-full max-w-screen-2xl px-4 py-4 sm:px-6 lg:px-10">
+        Creado con ❤️ por <a
+          href="https://www.linkedin.com/in/fcantora/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="rounded-sm text-white underline decoration-lime/70 underline-offset-4 hover:text-lime focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime"
+        >
+          FerC<span class="sr-only"> en LinkedIn (se abre en una pestaña nueva)</span>
+        </a>
+      </span>
+    </p>
   </body>
 </html>
