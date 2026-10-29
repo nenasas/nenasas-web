@@ -38,18 +38,53 @@ function makeUrl(path: string, params: Record<string, string>) {
   return u.toString();
 }
 async function verifiedPaidEmail(sub: Subscription, headers: Record<string, string>): Promise<string | null> {
-  const invoices = await getJson<Page<Invoice>>(
-    makeUrl('/authorized_payments/search', { preapproval_id: sub.id, limit: '100' }), headers
-  );
-  // La API puede devolver varias cuotas: buscamos una con pago aprobado.
-  const approved = invoices.results?.find((x) => x.payment?.id && x.payment.status === 'approved');
-  if (!approved?.payment?.id) return null;
-  const payment = await getJson<Payment>(
-    `${API}/v1/payments/${encodeURIComponent(String(approved.payment.id))}`, headers
-  );
-  if (payment.status !== 'approved') return null;
-  if (payment.payer?.id && sub.payer_id && String(payment.payer.id) !== String(sub.payer_id)) return null;
-  return normalizeEmail(payment.payer?.email) ?? normalizeEmail(sub.payer_email) ?? null;
+  const direct = normalizeEmail(sub.payer_email);
+  if (direct) return direct;
+
+  const detailRes = await fetch(`${API}/preapproval/${encodeURIComponent(sub.id)}`, { headers, cache: 'no-store' });
+  if (detailRes.ok) {
+    const detail = (await detailRes.json()) as Subscription;
+    const fromDetail = normalizeEmail(detail.payer_email);
+    if (fromDetail) return fromDetail;
+  }
+
+  const invRes = await fetch(makeUrl('/authorized_payments/search', { preapproval_id: sub.id }), { headers, cache: 'no-store' });
+  if (invRes.ok) {
+    const invoices = (await invRes.json()) as Page<Invoice>;
+    const paymentId = invoices.results?.find((x) => x.payment?.id && x.payment.status === 'approved')?.payment?.id;
+    if (paymentId) {
+      const payRes = await fetch(`${API}/v1/payments/${encodeURIComponent(String(paymentId))}`, { headers, cache: 'no-store' });
+      if (payRes.ok) {
+        const payment = (await payRes.json()) as Payment;
+        const fromPay = normalizeEmail(payment.payer?.email);
+        if (fromPay) return fromPay;
+      }
+    }
+  }
+
+  if (sub.payer_id) {
+    const searchPayRes = await fetch(
+      makeUrl('/v1/payments/search', { 'payer.id': String(sub.payer_id), status: 'approved', sort: 'date_created', criteria: 'desc', limit: '5' }),
+      { headers, cache: 'no-store' }
+    );
+    if (searchPayRes.ok) {
+      const payments = (await searchPayRes.json()) as Page<Payment & { id?: number | string }>;
+      for (const item of payments.results ?? []) {
+        const fromItem = normalizeEmail(item.payer?.email);
+        if (fromItem) return fromItem;
+        if (item.id) {
+          const payRes = await fetch(`${API}/v1/payments/${encodeURIComponent(String(item.id))}`, { headers, cache: 'no-store' });
+          if (payRes.ok) {
+            const payment = (await payRes.json()) as Payment;
+            const fromPay = normalizeEmail(payment.payer?.email);
+            if (fromPay) return fromPay;
+          }
+        }
+      }
+    }
+  }
+
+  return null;
 }
 async function inSocios(email: string, headers: Record<string, string>, listId: number): Promise<boolean> {
   const r = await fetch(`${BREVO}/contacts/${encodeURIComponent(email)}`, { headers, cache: 'no-store' });

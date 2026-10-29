@@ -114,7 +114,7 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(null, { status: 500 });
   }
 
-  const sub = (await subRes.json()) as { status?: string; payer_email?: string };
+  const sub = (await subRes.json()) as { status?: string; payer_id?: number | string; payer_email?: string };
   if (sub.status !== "authorized") {
     console.info("Mercado Pago subscription not authorized yet", preapprovalId, sub.status);
     return new Response(null, { status: 200 });
@@ -125,7 +125,7 @@ export const POST: APIRoute = async ({ request }) => {
   if (!email) {
     if (!paymentId) {
       const searchRes = await fetch(
-        `${MP_API}/authorized_payments/search?preapproval_id=${encodeURIComponent(preapprovalId)}&limit=20`,
+        `${MP_API}/authorized_payments/search?preapproval_id=${encodeURIComponent(preapprovalId)}`,
         { headers },
       );
       if (searchRes.ok) {
@@ -135,7 +135,23 @@ export const POST: APIRoute = async ({ request }) => {
         paymentId = invoices.results?.find((x) => x.payment?.id && x.payment.status === "approved")?.payment?.id;
       }
     }
-    if (paymentId) {
+    if (!paymentId && sub.payer_id) {
+      const searchPayRes = await fetch(
+        `${MP_API}/v1/payments/search?payer.id=${encodeURIComponent(String(sub.payer_id))}&status=approved&sort=date_created&criteria=desc&limit=5`,
+        { headers },
+      );
+      if (searchPayRes.ok) {
+        const payments = (await searchPayRes.json()) as {
+          results?: Array<{ id?: number | string; payer?: { email?: string } }>;
+        };
+        for (const item of payments.results ?? []) {
+          email = normalizeEmail(item.payer?.email);
+          if (email) break;
+          if (!paymentId && item.id) paymentId = item.id;
+        }
+      }
+    }
+    if (!email && paymentId) {
       const payRes = await fetch(`${MP_API}/v1/payments/${encodeURIComponent(String(paymentId))}`, { headers });
       if (payRes.ok) {
         const payment = (await payRes.json()) as { status?: string; payer?: { email?: string } };
