@@ -1,0 +1,6 @@
+{
+  "crons": [
+    { "path": "/api/sync-socios?apply=1", "schedule": "0 12 * * *" }
+  ]
+}
+
