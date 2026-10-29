@@ -55,6 +55,12 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(null, { status: 500 });
   }
   if (!signatureMatches(request, secret)) return new Response(null, { status: 401 });
+  if (env("MERCADOPAGO_WEBHOOK_WRITES_ENABLED") !== "true") {
+    console.info(
+      "Mercado Pago webhook: escritura temporalmente deshabilitada"
+    );
+    return new Response(null, { status: 200 });
+  }
 
   let notification: { type?: string; data?: { id?: string | number } };
   try {
