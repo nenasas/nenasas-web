@@ -110,7 +110,7 @@ export const GET: APIRoute = async ({ request }) => {
 
   const url = new URL(request.url);
   const requestedWrite = url.searchParams.get('apply') === '1';
-  const apply = requestedWrite && env('SOCIOS_SYNC_WRITES_ENABLED') === 'true';
+  const apply = requestedWrite && env('SOCIOS_SYNC_WRITES_ENABLED') !== 'false';
   if (requestedWrite && !apply)
     return Response.json({ ok: false, error: 'La escritura está deshabilitada por configuración' }, { status: 403 });
 
