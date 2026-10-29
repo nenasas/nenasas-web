@@ -7,12 +7,14 @@
  * IMPORTANTE: SOCIOS_SYNC_FROM debe ser la fecha real de puesta en marcha.
  */
 import type { APIRoute } from 'astro';
+import { addSocio, normalizeEmail } from '../../lib/brevo';
 export const prerender = false;
 
 type Subscription = {
   id: string;
   status?: string;
   payer_id?: number | string;
+  payer_email?: string;
   preapproval_plan_id?: string;
   date_created?: string;
 };
@@ -45,9 +47,9 @@ async function verifiedPaidEmail(sub: Subscription, headers: Record<string, stri
   const payment = await getJson<Payment>(
     `${API}/v1/payments/${encodeURIComponent(String(approved.payment.id))}`, headers
   );
-  if (payment.status !== 'approved' || !payment.payer?.email || !payment.payer.id || !sub.payer_id) return null;
-  if (String(payment.payer.id) !== String(sub.payer_id)) return null;
-  return payment.payer.email.trim().toLowerCase();
+  if (payment.status !== 'approved') return null;
+  if (payment.payer?.id && sub.payer_id && String(payment.payer.id) !== String(sub.payer_id)) return null;
+  return normalizeEmail(payment.payer?.email) ?? normalizeEmail(sub.payer_email) ?? null;
 }
 async function inSocios(email: string, headers: Record<string, string>, listId: number): Promise<boolean> {
   const r = await fetch(`${BREVO}/contacts/${encodeURIComponent(email)}`, { headers, cache: 'no-store' });
@@ -55,13 +57,6 @@ async function inSocios(email: string, headers: Record<string, string>, listId: 
   if (!r.ok) throw Error(`Brevo: HTTP ${r.status} al consultar contacto`);
   const person = (await r.json()) as { listIds?: number[] };
   return person.listIds?.includes(listId) ?? false;
-}
-async function addSocio(email: string, headers: Record<string, string>, listId: number) {
-  const r = await fetch(`${BREVO}/contacts`, {
-    method: 'POST', headers,
-    body: JSON.stringify({ email, listIds: [listId], updateEnabled: true }),
-  });
-  if (!r.ok) throw Error(`Brevo: HTTP ${r.status} al agregar contacto`);
 }
 
 export const GET: APIRoute = async ({ request }) => {
@@ -110,7 +105,7 @@ export const GET: APIRoute = async ({ request }) => {
             const email = await verifiedPaidEmail(sub, mpHeaders);
             if (!email) { counts.noVerifiedPaidEmail++; continue; }
             if (await inSocios(email, brevoHeaders, listId)) { counts.alreadyInSocios++; continue; }
-            if (apply) { await addSocio(email, brevoHeaders, listId); counts.added++; }
+            if (apply) { await addSocio(email); counts.added++; }
             else counts.wouldAdd++;
           } catch (err) {
             counts.errors++;

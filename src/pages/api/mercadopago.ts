@@ -4,10 +4,14 @@ import { addSocio, normalizeEmail } from "../../lib/brevo";
 
 export const prerender = false;
 
-const SIGNUP_TYPE = "subscription_preapproval";
+const MP_API = "https://api.mercadopago.com";
+const SIGNUP_TYPES = new Set([
+  "subscription_preapproval",
+  "subscription_authorized_payment",
+]);
 
 function env(name: string): string | undefined {
-  const value = process.env[name];
+  const value = ((import.meta.env as Record<string, string | undefined>)[name] ?? process.env[name])?.trim();
   return value ? value : undefined;
 }
 
@@ -55,10 +59,8 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(null, { status: 500 });
   }
   if (!signatureMatches(request, secret)) return new Response(null, { status: 401 });
-  if (env("MERCADOPAGO_WEBHOOK_WRITES_ENABLED") !== "true") {
-    console.info(
-      "Mercado Pago webhook: escritura temporalmente deshabilitada"
-    );
+  if (env("MERCADOPAGO_WEBHOOK_WRITES_ENABLED") === "false") {
+    console.info("Mercado Pago webhook: escritura temporalmente deshabilitada");
     return new Response(null, { status: 200 });
   }
 
@@ -71,38 +73,81 @@ export const POST: APIRoute = async ({ request }) => {
 
   const url = new URL(request.url);
   const type = url.searchParams.get("type") ?? notification.type;
-  if (type !== SIGNUP_TYPE) return new Response(null, { status: 200 });
+  if (!type || !SIGNUP_TYPES.has(type)) return new Response(null, { status: 200 });
 
   const id = url.searchParams.get("data.id") ?? (notification.data?.id == null ? "" : String(notification.data.id));
-  if (!id) {
-    console.error("Mercado Pago subscription notification had no id");
-    return new Response(null, { status: 200 });
-  }
+  if (!id) return new Response(null, { status: 200 });
 
   const token = env("MERCADOPAGO_ACCESS_TOKEN");
   if (!token) {
     console.error("MERCADOPAGO_ACCESS_TOKEN is not set");
     return new Response(null, { status: 500 });
   }
+  const headers = { Authorization: `Bearer ${token}` };
 
-  const subscriptionResponse = await fetch(`https://api.mercadopago.com/preapproval/${encodeURIComponent(id)}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  if (subscriptionResponse.status === 404) {
-    console.error("Mercado Pago subscription was not found", id);
+  let preapprovalId = id;
+  let paymentId: string | number | undefined;
+
+  if (type === "subscription_authorized_payment") {
+    const invoiceRes = await fetch(`${MP_API}/authorized_payments/${encodeURIComponent(id)}`, { headers });
+    if (invoiceRes.status === 404) return new Response(null, { status: 200 });
+    if (!invoiceRes.ok) return new Response(null, { status: 500 });
+    const invoice = (await invoiceRes.json()) as {
+      preapproval_id?: string;
+      payment?: { id?: number | string; status?: string };
+    };
+    if (!invoice.preapproval_id) return new Response(null, { status: 200 });
+    preapprovalId = invoice.preapproval_id;
+    if (invoice.payment?.status === "approved") paymentId = invoice.payment.id;
+  }
+
+  const subRes = await fetch(`${MP_API}/preapproval/${encodeURIComponent(preapprovalId)}`, { headers });
+  if (subRes.status === 404) return new Response(null, { status: 200 });
+  if (!subRes.ok) return new Response(null, { status: 500 });
+
+  const sub = (await subRes.json()) as {
+    status?: string;
+    payer_id?: number | string;
+    payer_email?: string;
+    preapproval_plan_id?: string;
+  };
+  if (sub.status !== "authorized") return new Response(null, { status: 200 });
+
+  const planIds = env("MERCADOPAGO_PLAN_IDS")?.split(",").map((x) => x.trim()).filter(Boolean);
+  if (planIds?.length && (!sub.preapproval_plan_id || !planIds.includes(sub.preapproval_plan_id))) {
     return new Response(null, { status: 200 });
   }
-  if (!subscriptionResponse.ok) {
-    console.error("Mercado Pago subscription lookup failed", subscriptionResponse.status);
-    return new Response(null, { status: 500 });
+
+  if (!paymentId) {
+    const searchRes = await fetch(
+      `${MP_API}/authorized_payments/search?preapproval_id=${encodeURIComponent(preapprovalId)}&limit=20`,
+      { headers },
+    );
+    if (!searchRes.ok) return new Response(null, { status: 500 });
+    const invoices = (await searchRes.json()) as {
+      results?: Array<{ payment?: { id?: number | string; status?: string } }>;
+    };
+    paymentId = invoices.results?.find((x) => x.payment?.id && x.payment.status === "approved")?.payment?.id;
   }
 
-  const subscription = (await subscriptionResponse.json()) as { status?: string; payer_email?: string };
-  if (subscription.status !== "authorized") return new Response(null, { status: 200 });
+  let email: string | undefined;
+  if (paymentId) {
+    const payRes = await fetch(`${MP_API}/v1/payments/${encodeURIComponent(String(paymentId))}`, { headers });
+    if (!payRes.ok) return new Response(null, { status: 500 });
+    const payment = (await payRes.json()) as {
+      status?: string;
+      payer?: { id?: number | string; email?: string };
+    };
+    if (payment.status !== "approved") return new Response(null, { status: 200 });
+    if (payment.payer?.id && sub.payer_id && String(payment.payer.id) !== String(sub.payer_id)) {
+      return new Response(null, { status: 200 });
+    }
+    email = normalizeEmail(payment.payer?.email);
+  }
 
-  const email = normalizeEmail(subscription.payer_email);
+  email ??= normalizeEmail(sub.payer_email);
   if (!email) {
-    console.error("Authorized Mercado Pago subscription had no payer email", id);
+    console.error("Authorized Mercado Pago subscription had no payer email", preapprovalId);
     return new Response(null, { status: 200 });
   }
 

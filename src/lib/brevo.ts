@@ -1,5 +1,5 @@
 function requiredEnv(name: string): string {
-  const value = process.env[name];
+  const value = ((import.meta.env as Record<string, string | undefined>)[name] ?? process.env[name])?.trim();
   if (!value) throw new Error(`${name} is not set`);
   return value;
 }
